@@ -1,26 +1,127 @@
+/*
+ * Tokens de diseño. Es el único archivo CSS que puede contener valores de color.
+ * Capa 1: primitivos de paleta. Solo se usan aquí dentro.
+ * Capa 2: tokens semánticos. Son los que usa todo el código.
+ * Los valores corresponden a la marca visual actual (Fénix).
+ */
 :root {
-  /* Paleta Fénix: magenta/fucsia como color principal, ultramar de apoyo, ámbar solo como brasa */
-  --bg: #0d0614;
-  --ink: #f4eaf3;
-  --ink-soft: #b9a5bd;
-  --ink-faint: #85708a;
+  /* ---------- 1. Primitivos ---------- */
+  --night-950: #0d0614;
+  --night-900: #1a0c24;
+  --mist-50: #f4eaf3;
+  --mist-300: #b9a5bd;
+  --mist-500: #85708a;
+  --white: #fff;
 
-  --magenta: #b5174f;
-  --fucsia: #d6246e;
-  --fucsia-light: #ff5a8a;
-  --violeta: #6a1b9a;
-  --ultramar: #1a2a7a;
-  --brasa: #ffb347;
+  --magenta-700: #b5174f;
+  --fucsia-500: #d6246e;
+  --fucsia-300: #ff5a8a;
+  --fucsia-200: #ff9db8;
+  --orquidea-700: #8d1d8f;
+  --violeta-700: #6a1b9a;
+  --ultramar-800: #1a2a7a;
+  --brasa-400: #ffb347;
+  --brasa-200: #ffd9a1;
 
-  --glass: rgba(255, 255, 255, 0.045);
-  --glass-strong: rgba(255, 255, 255, 0.08);
-  --line: rgba(255, 255, 255, 0.09);
-  --line-strong: rgba(255, 255, 255, 0.16);
+  --spectro-stop-0: #12061c;
+  --spectro-stop-1: #4a1470;
+  --spectro-stop-2: #c2185b;
+  --spectro-stop-3: #ff5a8a;
+  --spectro-stop-4: #ffd08a;
 
-  --grad-main: linear-gradient(135deg, var(--fucsia) 0%, #8d1d8f 100%);
-  --grad-ember: linear-gradient(135deg, var(--fucsia) 0%, var(--brasa) 100%);
+  --white-a045: rgba(255, 255, 255, 0.045);
+  --white-a08: rgba(255, 255, 255, 0.08);
+  --white-a09: rgba(255, 255, 255, 0.09);
+  --white-a16: rgba(255, 255, 255, 0.16);
+  --black-a50: rgba(0, 0, 0, 0.5);
+  --fucsia-a10: rgba(214, 36, 110, 0.1);
+  --fucsia-a12: rgba(214, 36, 110, 0.12);
+  --fucsia-a14: rgba(214, 36, 110, 0.14);
+  --fucsia-a18: rgba(214, 36, 110, 0.18);
+  --fucsia-a28: rgba(214, 36, 110, 0.28);
+  --fucsia-a30: rgba(214, 36, 110, 0.3);
+  --fucsia-a35: rgba(214, 36, 110, 0.35);
+  --fucsia-a40: rgba(214, 36, 110, 0.4);
+  --ultramar-a18: rgba(26, 42, 122, 0.18);
+  --ultramar-a45: rgba(26, 42, 122, 0.45);
+  --violeta-a22: rgba(106, 27, 154, 0.22);
+  --brasa-a08: rgba(255, 179, 71, 0.08);
+  --brasa-a10: rgba(255, 179, 71, 0.1);
+  --brasa-a30: rgba(255, 179, 71, 0.3);
 
-  --radius: 16px;
+  /* ---------- 2. Semánticos ---------- */
+  --color-bg: var(--night-950);
+  --color-surface: var(--white-a045);
+  --color-surface-2: var(--white-a08);
+  --color-surface-solid: var(--night-900);
+  --color-border: var(--white-a09);
+  --color-border-strong: var(--white-a16);
+  --color-text: var(--mist-50);
+  --color-text-muted: var(--mist-300);
+  --color-text-subtle: var(--mist-500);
+  --color-primary: var(--fucsia-500);
+  --color-primary-strong: var(--magenta-700);
+  --color-primary-light: var(--fucsia-300);
+  --color-on-primary: var(--white);
+  --color-accent: var(--brasa-400);
+  --color-info: var(--ultramar-800);
+  --color-warning: var(--brasa-200);
+  --color-warning-surface: var(--brasa-a08);
+  --color-warning-surface-strong: var(--brasa-a10);
+  --color-warning-border: var(--brasa-a30);
+  --color-danger: var(--fucsia-200);
+  --color-danger-surface: var(--fucsia-a12);
+  --color-danger-border: var(--fucsia-a35);
+  --color-selected-surface: var(--fucsia-a14);
+  --color-selected-border: var(--fucsia-a40);
+  --color-drag-surface: var(--fucsia-a10);
+  --color-scrim: var(--black-a50);
+
+  --spectro-0: var(--spectro-stop-0);
+  --spectro-1: var(--spectro-stop-1);
+  --spectro-2: var(--spectro-stop-2);
+  --spectro-3: var(--spectro-stop-3);
+  --spectro-4: var(--spectro-stop-4);
+
+  --gradient-primary: linear-gradient(135deg, var(--fucsia-500) 0%, var(--orquidea-700) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--fucsia-500) 0%, var(--brasa-400) 100%);
+  --gradient-hero: linear-gradient(135deg, var(--fucsia-a18), var(--ultramar-a18));
+  --background-page:
+    radial-gradient(900px 600px at 8% -10%, var(--fucsia-a28), transparent 60%),
+    radial-gradient(800px 600px at 100% 100%, var(--ultramar-a45), transparent 60%),
+    radial-gradient(600px 400px at 70% 0%, var(--violeta-a22), transparent 60%), var(--night-950);
+
+  --shadow-primary: 0 6px 22px var(--fucsia-a30);
+  --shadow-icon: 0 8px 28px var(--fucsia-a35);
+
+  --radius-xxs: 3px;
+  --radius-xs: 4px;
   --radius-sm: 10px;
-  --font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --radius-md: 16px;
+  --radius-pill: 999px;
+  --radius-full: 50%;
+
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-5: 5px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-11: 11px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-18: 18px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-40: 40px;
+
+  --font-sans: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+
+  --duration-fast: 0.12s;
+  --duration-base: 0.2s;
+  --duration-slow: 0.25s;
+  --duration-wave: 1s;
+  --duration-pulse: 1.2s;
 }

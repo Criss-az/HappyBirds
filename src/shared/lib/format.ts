@@ -4,6 +4,11 @@ export function formatDuration(sec: number): string {
   return `${m}:${String(s % 60).padStart(2, '0')}`
 }
 
+/** Segundos con un decimal solo si hace falta: 3 → "3", 4,6 → "4,6". */
+export function formatSeconds(sec: number): string {
+  return sec.toLocaleString('es-BO', { maximumFractionDigits: 1 })
+}
+
 export function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`

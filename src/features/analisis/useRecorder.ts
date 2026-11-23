@@ -58,13 +58,16 @@ export function useRecorder(onFinish: (file: File) => void) {
     }
   }, [cleanup, onFinish, stop])
 
-  useEffect(() => () => {
-    if (recorder.current && recorder.current.state !== 'inactive') {
-      recorder.current.onstop = null
-      recorder.current.stop()
-    }
-    cleanup()
-  }, [cleanup])
+  useEffect(
+    () => () => {
+      if (recorder.current && recorder.current.state !== 'inactive') {
+        recorder.current.onstop = null
+        recorder.current.stop()
+      }
+      cleanup()
+    },
+    [cleanup],
+  )
 
   return { recording, elapsed, error, start, stop }
 }

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { Source } from '../types'
-import { MAX_RECORD_SEC, useRecorder } from '../hooks/useRecorder'
-import { formatBytes, formatDuration } from '../lib/format'
-import { IconFile, IconMic, IconStop, IconUpload } from './Icons'
+import type { Source } from '../../types'
+import { Button } from '../../shared/components/Button'
+import { IconFile, IconMic, IconStop, IconUpload } from '../../shared/components/Icons'
+import { Notice } from '../../shared/components/Notice'
+import { formatBytes, formatDuration } from '../../shared/lib/format'
+import { MAX_RECORD_SEC, useRecorder } from './useRecorder'
 
 interface Props {
   busy: boolean
@@ -25,7 +27,12 @@ export function UploadView({ busy, stage, error, onAnalyze }: Props) {
     })
   }, [])
 
-  useEffect(() => () => { if (staged) URL.revokeObjectURL(staged.url) }, [staged])
+  useEffect(
+    () => () => {
+      if (staged) URL.revokeObjectURL(staged.url)
+    },
+    [staged],
+  )
 
   const rec = useRecorder((f) => stage_(f, 'recording'))
 
@@ -43,13 +50,26 @@ export function UploadView({ busy, stage, error, onAnalyze }: Props) {
 
       <div
         className={`drop glass ${dragging ? 'is-drag' : ''} ${busy ? 'is-busy' : ''}`}
-        onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
+        onDragOver={(e) => {
+          e.preventDefault()
+          setDragging(true)
+        }}
         onDragLeave={() => setDragging(false)}
-        onDrop={(e) => { e.preventDefault(); setDragging(false); pick(e.dataTransfer.files) }}
+        onDrop={(e) => {
+          e.preventDefault()
+          setDragging(false)
+          pick(e.dataTransfer.files)
+        }}
       >
         {busy ? (
           <div className="drop__busy" role="status" aria-live="polite">
-            <div className="wave"><i /><i /><i /><i /><i /></div>
+            <div className="wave">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
             <p>{stage || 'Analizando…'}</p>
           </div>
         ) : staged ? (
@@ -58,36 +78,59 @@ export function UploadView({ busy, stage, error, onAnalyze }: Props) {
               <IconFile />
               <div>
                 <strong>{staged.file.name}</strong>
-                <span>{formatBytes(staged.file.size)} · {staged.source === 'recording' ? 'Grabación' : 'Archivo'}</span>
+                <span>
+                  {formatBytes(staged.file.size)} · {staged.source === 'recording' ? 'Grabación' : 'Archivo'}
+                </span>
               </div>
             </div>
             <audio controls src={staged.url} />
             <div className="row">
-              <button className="btn btn--primary" onClick={() => onAnalyze(staged.file, staged.source)}>Analizar audio</button>
-              <button className="btn btn--ghost" onClick={() => setStaged(null)}>Quitar</button>
+              <Button onClick={() => onAnalyze(staged.file, staged.source)}>Analizar audio</Button>
+              <Button variant="ghost" onClick={() => setStaged(null)}>
+                Quitar
+              </Button>
             </div>
           </div>
         ) : rec.recording ? (
           <div className="drop__rec" role="status">
             <span className="rec-dot" />
-            <p className="rec-time">{formatDuration(rec.elapsed)} <small>/ {formatDuration(MAX_RECORD_SEC)}</small></p>
-            <button className="btn btn--primary" onClick={rec.stop}><IconStop size={18} /> Detener</button>
+            <p className="rec-time">
+              {formatDuration(rec.elapsed)} <small>/ {formatDuration(MAX_RECORD_SEC)}</small>
+            </p>
+            <Button onClick={rec.stop}>
+              <IconStop size={18} /> Detener
+            </Button>
           </div>
         ) : (
           <>
             <button className="drop__main" onClick={() => input.current?.click()}>
-              <span className="drop__icon"><IconUpload size={28} /></span>
+              <span className="drop__icon">
+                <IconUpload size={28} />
+              </span>
               <strong>Cargar audio</strong>
               <span>Arrastra un archivo aquí o haz clic para elegirlo</span>
             </button>
-            <div className="drop__or"><span>o</span></div>
-            <button className="btn btn--ghost" onClick={rec.start}><IconMic size={18} /> Grabar con el micrófono</button>
-            <input ref={input} type="file" accept={ACCEPT} hidden onChange={(e) => { pick(e.target.files); e.target.value = '' }} />
+            <div className="drop__or">
+              <span>o</span>
+            </div>
+            <Button variant="ghost" onClick={rec.start}>
+              <IconMic size={18} /> Grabar con el micrófono
+            </Button>
+            <input
+              ref={input}
+              type="file"
+              accept={ACCEPT}
+              hidden
+              onChange={(e) => {
+                pick(e.target.files)
+                e.target.value = ''
+              }}
+            />
           </>
         )}
       </div>
 
-      {(error || rec.error) && <p className="error" role="alert">{error ?? rec.error}</p>}
+      {(error || rec.error) && <Notice tone="error">{error ?? rec.error}</Notice>}
     </div>
   )
 }

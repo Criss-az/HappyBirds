@@ -1,6 +1,7 @@
-import type { AnalysisResult } from '../types'
-import { formatDate, pct } from '../lib/format'
-import { IconClose, IconPlus, IconTrash, Logo } from './Icons'
+import type { AnalysisResult } from '../../types'
+import { Button } from '../../shared/components/Button'
+import { IconClose, IconPlus, IconTrash, Logo } from '../../shared/components/Icons'
+import { formatDate, pct } from '../../shared/lib/format'
 
 interface Props {
   items: AnalysisResult[]
@@ -25,9 +26,9 @@ export function Sidebar({ items, selectedId, open, onNew, onSelect, onDelete, on
         </button>
       </div>
 
-      <button className="btn btn--primary btn--block" onClick={onNew}>
+      <Button block onClick={onNew}>
         <IconPlus size={18} /> Nuevo análisis
-      </button>
+      </Button>
 
       <h2 className="sidebar__title">Historial</h2>
       {items.length === 0 ? (
@@ -36,14 +37,22 @@ export function Sidebar({ items, selectedId, open, onNew, onSelect, onDelete, on
         <ul className="history">
           {items.map((it) => (
             <li key={it.id}>
-              <button className={`history__item ${it.id === selectedId ? 'is-active' : ''}`} onClick={() => onSelect(it.id)}>
+              <button
+                className={`history__item ${it.id === selectedId ? 'is-active' : ''}`}
+                onClick={() => onSelect(it.id)}
+              >
                 <span className="history__name">{it.top[0].commonName}</span>
                 <span className="history__meta">
-                  {pct(it.top[0].probability)} · {it.fileName.length > 22 ? `${it.fileName.slice(0, 20)}…` : it.fileName}
+                  {pct(it.top[0].probability)} ·{' '}
+                  {it.fileName.length > 22 ? `${it.fileName.slice(0, 20)}…` : it.fileName}
                 </span>
                 <span className="history__date">{formatDate(it.createdAt)}</span>
               </button>
-              <button className="icon-btn history__del" onClick={() => onDelete(it.id)} aria-label={`Eliminar ${it.fileName}`}>
+              <button
+                className="icon-btn history__del"
+                onClick={() => onDelete(it.id)}
+                aria-label={`Eliminar ${it.fileName}`}
+              >
                 <IconTrash size={16} />
               </button>
             </li>

@@ -1,6 +1,6 @@
-import type { AudioFeatures, SpectrogramData } from '../types'
+import type { AudioFeatures, SpectrogramData } from '../../types'
 
-const WINDOW_SEC = 5
+export const WINDOW_SEC = 5
 const N_FFT = 1024
 const N_BANDS = 64
 const N_FRAMES = 100
@@ -126,7 +126,8 @@ function melSpectrogram(x: Float32Array, sr: number, start: number): Spectrogram
 }
 
 export async function extractFeatures(file: File): Promise<AudioFeatures> {
-  const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
+  const Ctx =
+    window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
   const ctx = new Ctx()
   try {
     const buf = await ctx.decodeAudioData(await file.arrayBuffer())

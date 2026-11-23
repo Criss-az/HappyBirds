@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import type { AnalysisResult } from '../types'
+import type { AnalysisResult } from '../../types'
 
+// La clave conserva el nombre anterior para no perder el historial ya guardado.
 const KEY = 'fenix.history.v1'
 const MAX_ITEMS = 30
 

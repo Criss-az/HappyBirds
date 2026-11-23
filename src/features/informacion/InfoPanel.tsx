@@ -1,16 +1,23 @@
+import { Badge } from '../../shared/components/Badge'
+
 export function InfoPanel() {
   return (
     <aside className="info glass" aria-label="Información general">
-      <span className="badge">Modo simulación</span>
+      <Badge>Modo simulación</Badge>
 
       <section>
         <h2>Sobre el modelo</h2>
         <dl className="kv">
-          <dt>Tipo</dt><dd>CNN supervisada</dd>
-          <dt>Entrada</dt><dd>Espectrograma Mel</dd>
-          <dt>Ventana</dt><dd>5 s, mono, 16 kHz</dd>
-          <dt>Bandas Mel</dt><dd>96</dd>
-          <dt>Salida</dt><dd>Softmax por especie</dd>
+          <dt>Tipo</dt>
+          <dd>CNN supervisada</dd>
+          <dt>Entrada</dt>
+          <dd>Espectrograma Mel</dd>
+          <dt>Ventana</dt>
+          <dd>5 s, mono, 16 kHz</dd>
+          <dt>Bandas Mel</dt>
+          <dd>96</dd>
+          <dt>Salida</dt>
+          <dd>Softmax por especie</dd>
         </dl>
       </section>
 
@@ -30,7 +37,10 @@ export function InfoPanel() {
 
       <section>
         <h2>Limitaciones</h2>
-        <p>El modelo solo reconoce las especies con las que fue entrenado y siempre propone alguna de ellas. La probabilidad no es una medida calibrada de certeza.</p>
+        <p>
+          El modelo solo reconoce las especies con las que fue entrenado y siempre propone alguna de ellas. La
+          probabilidad no es una medida calibrada de certeza.
+        </p>
       </section>
     </aside>
   )

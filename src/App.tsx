@@ -1,13 +1,13 @@
 import { useCallback, useRef, useState } from 'react'
 import type { Source } from './types'
-import { extractFeatures } from './lib/spectrogram'
+import { extractFeatures } from './features/analisis/spectrogram'
 import { inference } from './services/inference'
-import { useHistory } from './hooks/useHistory'
-import { Sidebar } from './components/Sidebar'
-import { InfoPanel } from './components/InfoPanel'
-import { UploadView } from './components/UploadView'
-import { ResultView } from './components/ResultView'
-import { IconMenu } from './components/Icons'
+import { useHistory } from './features/historial/useHistory'
+import { Sidebar } from './features/historial/Sidebar'
+import { InfoPanel } from './features/informacion/InfoPanel'
+import { UploadView } from './features/analisis/UploadView'
+import { ResultView } from './features/analisis/ResultView'
+import { IconMenu } from './shared/components/Icons'
 
 export default function App() {
   const { items, add, remove } = useHistory()

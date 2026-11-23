@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import type { SpectrogramData } from '../../types'
 import { formatSeconds } from '../../shared/lib/format'
 import { readRgbToken, useThemeVersion, type Rgb } from '../../shared/lib/readToken'
-import { WINDOW_SEC } from './spectrogram'
+import { DB_RANGE, WINDOW_SEC } from './spectrogram'
 
 const STOP_TOKENS = ['--spectro-0', '--spectro-1', '--spectro-2', '--spectro-3', '--spectro-4']
 
@@ -43,19 +43,37 @@ export function Spectrogram({ data, windowSec }: { data: SpectrogramData; window
     ctx.putImageData(img, 0, 0)
   }, [data, columns, theme])
 
+  const bands = [data.h, Math.round(data.h / 2), 0]
+  const legend = { background: `linear-gradient(to top, ${STOP_TOKENS.map((t) => `var(${t})`).join(', ')})` }
+
   return (
     <figure className="spec">
-      <canvas
-        ref={ref}
-        width={columns}
-        height={data.h}
-        className="spec__canvas"
-        role="img"
-        aria-label="Espectrograma Mel de la ventana analizada"
-      />
+      <div className="spec__plot">
+        <div className="spec__y" aria-hidden="true">
+          {bands.map((b) => (
+            <span key={b}>{b}</span>
+          ))}
+        </div>
+        <canvas
+          ref={ref}
+          width={columns}
+          height={data.h}
+          className="spec__canvas"
+          role="img"
+          aria-label={`Espectrograma Mel de ${formatSeconds(windowSec)} segundos`}
+        />
+        <div className="spec__legend" aria-hidden="true">
+          <i style={legend} />
+          <div>
+            <span>0 dB</span>
+            <span>-{DB_RANGE / 2}</span>
+            <span>-{DB_RANGE} dB</span>
+          </div>
+        </div>
+      </div>
       <figcaption className="spec__axis">
         <span>0 s</span>
-        <span>Tiempo</span>
+        <span>Tiempo (s) · Banda Mel en el eje vertical</span>
         <span>{formatSeconds(windowSec)} s</span>
       </figcaption>
     </figure>

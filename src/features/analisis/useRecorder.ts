@@ -10,10 +10,46 @@ export function useRecorder(onFinish: (file: File) => void) {
   const stream = useRef<MediaStream | null>(null)
   const chunks = useRef<Blob[]>([])
   const timer = useRef<number | null>(null)
+  const [level, setLevel] = useState(0)
+  const meter = useRef<{ ctx: AudioContext; raf: number } | null>(null)
+
+  /** Solo mide el volumen: no altera lo que se graba. */
+  const startMeter = useCallback((s: MediaStream) => {
+    const Ctx =
+      window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+    if (!Ctx) return
+    try {
+      const ctx = new Ctx()
+      // Algunos navegadores crean el contexto suspendido después de pedir el permiso.
+      void ctx.resume()
+      const analyser = ctx.createAnalyser()
+      analyser.fftSize = 1024
+      ctx.createMediaStreamSource(s).connect(analyser)
+      const samples = new Float32Array(analyser.fftSize)
+      const state = { ctx, raf: 0 }
+      const tick = () => {
+        analyser.getFloatTimeDomainData(samples)
+        let sum = 0
+        for (let i = 0; i < samples.length; i++) sum += samples[i] * samples[i]
+        setLevel(Math.min(1, Math.sqrt(sum / samples.length) * 4))
+        state.raf = requestAnimationFrame(tick)
+      }
+      meter.current = state
+      state.raf = requestAnimationFrame(tick)
+    } catch {
+      /* sin medidor: la grabación sigue funcionando */
+    }
+  }, [])
 
   const cleanup = useCallback(() => {
     if (timer.current) window.clearInterval(timer.current)
     timer.current = null
+    if (meter.current) {
+      cancelAnimationFrame(meter.current.raf)
+      void meter.current.ctx.close()
+      meter.current = null
+    }
+    setLevel(0)
     stream.current?.getTracks().forEach((t) => t.stop())
     stream.current = null
     setRecording(false)
@@ -46,6 +82,7 @@ export function useRecorder(onFinish: (file: File) => void) {
       mr.start()
       setElapsed(0)
       setRecording(true)
+      startMeter(s)
       timer.current = window.setInterval(() => {
         setElapsed((p) => {
           if (p + 1 >= MAX_RECORD_SEC) stop()
@@ -56,7 +93,7 @@ export function useRecorder(onFinish: (file: File) => void) {
       cleanup()
       setError('No se pudo acceder al micrófono. Revisa el permiso del navegador.')
     }
-  }, [cleanup, onFinish, stop])
+  }, [cleanup, onFinish, startMeter, stop])
 
   useEffect(
     () => () => {
@@ -69,5 +106,5 @@ export function useRecorder(onFinish: (file: File) => void) {
     [cleanup],
   )
 
-  return { recording, elapsed, error, start, stop }
+  return { recording, elapsed, level, error, start, stop }
 }

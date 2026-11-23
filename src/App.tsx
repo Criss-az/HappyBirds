@@ -1,86 +1,65 @@
-import { useCallback, useRef, useState } from 'react'
-import type { Source } from './types'
-import { extractFeatures } from './features/analisis/spectrogram'
-import { inference } from './services/inference'
+import { useCallback } from 'react'
+import type { AnalysisResult } from './types'
+import { Header } from './app/Header'
+import { useHashRoute } from './app/useHashRoute'
+import { useTheme } from './app/useTheme'
+import { AnalizarView } from './features/analisis/AnalizarView'
+import { useAnalysisSession } from './features/analisis/useAnalysisSession'
+import { DatasetView } from './features/dataset/DatasetView'
+import { HistorialView } from './features/historial/HistorialView'
 import { useHistory } from './features/historial/useHistory'
-import { Sidebar } from './features/historial/Sidebar'
-import { InfoPanel } from './features/informacion/InfoPanel'
-import { UploadView } from './features/analisis/UploadView'
-import { ResultView } from './features/analisis/ResultView'
-import { IconMenu } from './shared/components/Icons'
+import { AcercaView } from './features/informacion/AcercaView'
+import { ModeloView } from './features/modelo/ModeloView'
+import { NoSupervisadoView } from './features/no-supervisado/NoSupervisadoView'
+import { ExperimentProvider } from './services/experimentos/useExperiments'
+import { isSimulatedProvider } from './services/inference/provider'
+import { APP_FOOTER } from './shared/config/brand'
 
 export default function App() {
+  const { route, navigate } = useHashRoute()
+  const { theme, toggle } = useTheme()
   const { items, add, remove } = useHistory()
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
-  const [stage, setStage] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const urls = useRef(new Map<string, string>())
 
-  const selected = items.find((i) => i.id === selectedId) ?? null
-
-  const analyze = useCallback(
-    async (file: File, source: Source) => {
-      setBusy(true)
-      setError(null)
-      try {
-        setStage('Leyendo audio y generando el espectrograma…')
-        const features = await extractFeatures(file)
-        setStage('Clasificando con el modelo…')
-        const result = await inference.analyze({ file, source, features })
-        urls.current.set(result.id, URL.createObjectURL(file))
-        add(result)
-        setSelectedId(result.id)
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'No se pudo analizar el audio.')
-      } finally {
-        setBusy(false)
-        setStage('')
-      }
+  const onDone = useCallback(
+    (result: AnalysisResult) => {
+      add(result)
+      navigate('analizar', result.id)
     },
-    [add],
+    [add, navigate],
   )
+  const session = useAnalysisSession(onDone)
 
-  const remove_ = (id: string) => {
-    const u = urls.current.get(id)
-    if (u) URL.revokeObjectURL(u)
-    urls.current.delete(id)
+  const onDelete = (id: string) => {
+    session.forget(id)
     remove(id)
-    if (id === selectedId) setSelectedId(null)
-  }
-
-  const go = (id: string | null) => {
-    setSelectedId(id)
-    setError(null)
-    setMenuOpen(false)
   }
 
   return (
-    <div className="app">
-      <Sidebar
-        items={items}
-        selectedId={selectedId}
-        open={menuOpen}
-        onNew={() => go(null)}
-        onSelect={go}
-        onDelete={remove_}
-        onClose={() => setMenuOpen(false)}
-      />
-      {menuOpen && <div className="scrim" onClick={() => setMenuOpen(false)} />}
-
-      <main className="main">
-        <button className="icon-btn menu-btn glass" onClick={() => setMenuOpen(true)} aria-label="Abrir historial">
-          <IconMenu />
-        </button>
-        {selected ? (
-          <ResultView result={selected} audioUrl={urls.current.get(selected.id)} onNew={() => go(null)} />
-        ) : (
-          <UploadView busy={busy} stage={stage} error={error} onAnalyze={analyze} />
-        )}
-      </main>
-
-      <InfoPanel />
-    </div>
+    <ExperimentProvider>
+      <div className="app-shell">
+        <a
+          className="skip-link"
+          href="#contenido"
+          onClick={(e) => {
+            e.preventDefault()
+            document.getElementById('contenido')?.focus()
+          }}
+        >
+          Saltar al contenido
+        </a>
+        <Header active={route.name} simulated={isSimulatedProvider} theme={theme} onToggleTheme={toggle} />
+        <main className="main-content" id="contenido" tabIndex={-1}>
+          {route.name === 'analizar' && (
+            <AnalizarView session={session} items={items} resultId={route.param} onNew={() => navigate('analizar')} />
+          )}
+          {route.name === 'historial' && <HistorialView items={items} onDelete={onDelete} />}
+          {route.name === 'dataset' && <DatasetView />}
+          {route.name === 'modelo' && <ModeloView />}
+          {route.name === 'no-supervisado' && <NoSupervisadoView />}
+          {route.name === 'acerca' && <AcercaView />}
+        </main>
+        <footer className="app-footer">{APP_FOOTER}</footer>
+      </div>
+    </ExperimentProvider>
   )
 }

@@ -20,6 +20,8 @@ export interface AudioFeatures {
   windowStartSec: number
   windowSec: number
   spectrogram: SpectrogramData
+  /** Unos 200 picos de la forma de onda (0–255) en base64. No existe en historial antiguo. */
+  peaks?: string
 }
 
 export interface SpeciesMetrics {

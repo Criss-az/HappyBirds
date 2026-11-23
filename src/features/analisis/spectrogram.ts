@@ -6,7 +6,8 @@ const N_BANDS = 64
 const N_FRAMES = 100
 const FMIN = 400
 const FMAX = 7500
-const DB_RANGE = 80
+export const DB_RANGE = 80
+const N_PEAKS = 200
 
 function fft(re: Float32Array, im: Float32Array) {
   const n = re.length
@@ -125,6 +126,25 @@ function melSpectrogram(x: Float32Array, sr: number, start: number): Spectrogram
   return { w: N_FRAMES, h: N_BANDS, b64: btoa(bin) }
 }
 
+/** Reduce la señal a picos para dibujar la forma de onda y guardarla en el historial. */
+function computePeaks(x: Float32Array): string {
+  const peaks = new Uint8Array(N_PEAKS)
+  let max = 0
+  const raw = new Float32Array(N_PEAKS)
+  for (let p = 0; p < N_PEAKS; p++) {
+    const from = Math.floor((p * x.length) / N_PEAKS)
+    const to = Math.max(from + 1, Math.floor(((p + 1) * x.length) / N_PEAKS))
+    let peak = 0
+    for (let i = from; i < to && i < x.length; i++) peak = Math.max(peak, Math.abs(x[i]))
+    raw[p] = peak
+    max = Math.max(max, peak)
+  }
+  for (let p = 0; p < N_PEAKS; p++) peaks[p] = max > 0 ? Math.round((raw[p] / max) * 255) : 0
+  let bin = ''
+  for (let i = 0; i < peaks.length; i++) bin += String.fromCharCode(peaks[i])
+  return btoa(bin)
+}
+
 export async function extractFeatures(file: File): Promise<AudioFeatures> {
   const Ctx =
     window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
@@ -140,6 +160,7 @@ export async function extractFeatures(file: File): Promise<AudioFeatures> {
       windowStartSec: start,
       windowSec: Math.min(WINDOW_SEC, buf.duration),
       spectrogram: melSpectrogram(x, buf.sampleRate, start),
+      peaks: computePeaks(x),
     }
   } catch (e) {
     if (e instanceof Error && e.message.startsWith('El audio')) throw e

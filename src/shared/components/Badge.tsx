@@ -1,5 +1,10 @@
 import type { ReactNode } from 'react'
 
-export function Badge({ children }: { children: ReactNode }) {
-  return <span className="badge">{children}</span>
+interface Props {
+  tone?: 'neutral' | 'green' | 'amber' | 'danger'
+  children: ReactNode
+}
+
+export function Badge({ tone = 'neutral', children }: Props) {
+  return <span className={`badge badge-${tone}`}>{children}</span>
 }

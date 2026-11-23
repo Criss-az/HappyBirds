@@ -1,0 +1,26 @@
+:root {
+  /* Paleta Fénix: magenta/fucsia como color principal, ultramar de apoyo, ámbar solo como brasa */
+  --bg: #0d0614;
+  --ink: #f4eaf3;
+  --ink-soft: #b9a5bd;
+  --ink-faint: #85708a;
+
+  --magenta: #b5174f;
+  --fucsia: #d6246e;
+  --fucsia-light: #ff5a8a;
+  --violeta: #6a1b9a;
+  --ultramar: #1a2a7a;
+  --brasa: #ffb347;
+
+  --glass: rgba(255, 255, 255, 0.045);
+  --glass-strong: rgba(255, 255, 255, 0.08);
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  --grad-main: linear-gradient(135deg, var(--fucsia) 0%, #8d1d8f 100%);
+  --grad-ember: linear-gradient(135deg, var(--fucsia) 0%, var(--brasa) 100%);
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}

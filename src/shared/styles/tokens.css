@@ -1,0 +1,192 @@
+/*
+ * Tokens de diseño. Es el único archivo que puede contener valores de color.
+ * Capa 1: primitivos de paleta, solo se usan aquí dentro.
+ * Capa 2: tokens semánticos, los que usa todo el código.
+ */
+:root {
+  /* ---------- 1. Primitivos (paleta de machineLearningP2) ---------- */
+  --white: #ffffff;
+  --paper-100: #f3f6f3;
+  --paper-200: #eef4ef;
+  --paper-300: #e7f0e9;
+  --moss-100: #e3efe6;
+  --moss-200: #d5e2d7;
+  --moss-300: #cddbce;
+  --moss-400: #b6d2bd;
+  --moss-500: #b4c8b7;
+  --sage-300: #a4b8aa;
+  --sage-400: #8fa596;
+  --sage-700: #5a6d5f;
+  --sage-800: #4a5e50;
+  --forest-300: #89bfa1;
+  --forest-350: #7cc29c;
+  --forest-400: #74a988;
+  --forest-450: #64a883;
+  --forest-500: #529471;
+  --forest-550: #4b8b68;
+  --forest-600: #3d8b63;
+  --forest-650: #2f7a54;
+  --forest-680: #276a48;
+  --forest-700: #2d6a4f;
+  --forest-800: #22543d;
+  --ink-900: #1c2a21;
+  --ink-100: #e7efe9;
+  --night-950: #121814;
+  --night-920: #141c17;
+  --night-900: #161f19;
+  --night-850: #1a231d;
+  --night-800: #212e25;
+  --night-750: #22362a;
+  --night-700: #28392e;
+  --night-650: #2f4236;
+  --night-600: #365944;
+  --night-550: #3d5646;
+  --amber-100: #f6eedb;
+  --amber-200: #dfd0ab;
+  --amber-400: #c79a49;
+  --amber-500: #b0893e;
+  --amber-600: #9e7425;
+  --amber-800: #785514;
+  --amber-900: #4d3f24;
+  --amber-950: #2b2416;
+  --red-100: #faeaea;
+  --red-200: #e2b8b8;
+  --red-300: #e08484;
+  --red-500: #b54848;
+  --red-700: #a23c3c;
+  --red-900: #563232;
+  --red-950: #2d1c1c;
+  --shadow-black: rgba(0, 0, 0, 0.16);
+
+  /* ---------- 2. Semánticos: tema claro ---------- */
+  color-scheme: light;
+  --color-bg: var(--paper-100);
+  --color-surface: var(--white);
+  --color-surface-2: var(--paper-200);
+  --color-surface-bar: var(--paper-300);
+  --color-input: var(--white);
+  --color-border: var(--moss-300);
+  --color-border-strong: var(--moss-500);
+  --color-text: var(--ink-900);
+  --color-text-muted: var(--sage-800);
+  --color-text-subtle: var(--sage-700);
+  --color-primary: var(--forest-700);
+  --color-primary-hover: var(--forest-800);
+  --color-primary-text: var(--forest-700);
+  --color-primary-soft: var(--moss-100);
+  --color-primary-soft-border: var(--moss-400);
+  --color-on-primary: var(--white);
+  --color-accent: var(--amber-600);
+  --color-info: var(--forest-550);
+  --color-focus: var(--forest-700);
+  --color-warning: var(--amber-800);
+  --color-warning-surface: var(--amber-100);
+  --color-warning-border: var(--amber-200);
+  --color-danger: var(--red-700);
+  --color-danger-fill: var(--red-500);
+  --color-on-danger: var(--white);
+  --color-danger-surface: var(--red-100);
+  --color-danger-border: var(--red-200);
+
+  --chart-grid: var(--moss-200);
+  --chart-axis: var(--sage-800);
+  --chart-primary: var(--forest-700);
+  --chart-secondary: var(--forest-400);
+  --chart-accent: var(--amber-600);
+  --chart-quality-a: var(--forest-700);
+  --chart-quality-b: var(--forest-500);
+  --chart-quality-c: var(--amber-500);
+  --cm-empty: var(--paper-200);
+  --cm-hit: var(--forest-700);
+  --cm-miss: var(--red-500);
+  --spectro-0: var(--ink-900);
+  --spectro-1: var(--forest-800);
+  --spectro-2: var(--forest-550);
+  --spectro-3: var(--amber-400);
+  --spectro-4: var(--amber-100);
+
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-tab: 5px;
+  --radius-md: 6px;
+  --radius-full: 50%;
+
+  --space-1: 1px;
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-5: 5px;
+  --space-6: 6px;
+  --space-7: 7px;
+  --space-8: 8px;
+  --space-9: 9px;
+  --space-10: 10px;
+  --space-11: 11px;
+  --space-12: 12px;
+  --space-13: 13px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-18: 18px;
+  --space-20: 20px;
+  --space-22: 22px;
+
+  --shadow-tooltip: 0 2px 8px var(--shadow-black);
+  --font-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --font-mono: Consolas, 'Courier New', monospace;
+  --duration-meter: 0.08s;
+  --duration-fast: 0.12s;
+  --duration-spin: 0.9s;
+  --icon-size-sm: 16px;
+  --icon-size-md: 20px;
+  --icon-size-lg: 24px;
+  --icon-size-tile: 26px;
+  --icon-stroke: 1.75;
+}
+
+/* ---------- Semánticos: tema oscuro ---------- */
+[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: var(--night-950);
+  --color-surface: var(--night-850);
+  --color-surface-2: var(--night-900);
+  --color-surface-bar: var(--night-800);
+  --color-input: var(--night-920);
+  --color-border: var(--night-650);
+  --color-border-strong: var(--night-550);
+  --color-text: var(--ink-100);
+  --color-text-muted: var(--sage-300);
+  --color-text-subtle: var(--sage-400);
+  --color-primary: var(--forest-650);
+  --color-primary-hover: var(--forest-680);
+  --color-primary-text: var(--forest-350);
+  --color-primary-soft: var(--night-750);
+  --color-primary-soft-border: var(--night-600);
+  --color-on-primary: var(--white);
+  --color-accent: var(--amber-400);
+  --color-info: var(--forest-450);
+  --color-focus: var(--forest-350);
+  --color-warning: var(--amber-400);
+  --color-warning-surface: var(--amber-950);
+  --color-warning-border: var(--amber-900);
+  --color-danger: var(--red-300);
+  --color-danger-fill: var(--red-500);
+  --color-on-danger: var(--white);
+  --color-danger-surface: var(--red-950);
+  --color-danger-border: var(--red-900);
+
+  --chart-grid: var(--night-700);
+  --chart-axis: var(--sage-300);
+  --chart-primary: var(--forest-600);
+  --chart-secondary: var(--forest-300);
+  --chart-accent: var(--amber-400);
+  --chart-quality-a: var(--forest-600);
+  --chart-quality-b: var(--forest-450);
+  --chart-quality-c: var(--amber-400);
+  --cm-empty: var(--night-900);
+  --cm-hit: var(--forest-600);
+  --cm-miss: var(--red-300);
+  --spectro-0: var(--night-950);
+  --spectro-1: var(--forest-800);
+  --spectro-2: var(--forest-550);
+  --spectro-3: var(--amber-400);
+  --spectro-4: var(--amber-100);
+}

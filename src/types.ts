@@ -20,6 +20,29 @@ export interface AudioFeatures {
   windowStartSec: number
   windowSec: number
   spectrogram: SpectrogramData
+  /** Unos 200 picos de la forma de onda (0–255) en base64. No existe en historial antiguo. */
+  peaks?: string
+}
+
+export interface SpeciesMetrics {
+  f1: number
+  recall: number
+  testSamples: number
+}
+
+export interface PredictionWindow {
+  startSec: number
+  durationSec: number
+}
+
+/** Respuesta JSON de POST /predict. Ver docs/contrato-modelo.md. */
+export interface PredictionResponse {
+  /** Al menos una especie. */
+  top: Candidate[]
+  speciesMetrics: SpeciesMetrics
+  window: PredictionWindow
+  modelVersion: string
+  warnings: string[]
 }
 
 export interface AnalysisResult {
@@ -33,9 +56,15 @@ export interface AnalysisResult {
   /** Ordenadas de mayor a menor probabilidad. */
   top: Candidate[]
   /** Métricas de la especie ganadora en el conjunto de prueba del modelo. */
-  speciesMetrics: { f1: number; recall: number; testSamples: number }
+  speciesMetrics: SpeciesMetrics
   warnings: string[]
   simulated: boolean
+  /** Versión del modelo que respondió. No existe en resultados simulados ni en historial antiguo. */
+  modelVersion?: string
+  /** Ventana que usó el modelo, según su respuesta. */
+  modelWindow?: PredictionWindow
+  /** Formato original, solo si no se pudo convertir a WAV y se envió el archivo tal cual. */
+  sourceFormat?: string
 }
 
 export interface AnalyzeRequest {

@@ -1,0 +1,10 @@
+{
+  "id": "cnn2d-pytorch-p2",
+  "nombre": "CNN 2D (PyTorch)",
+  "descripcion": "Primera entrega: CNN 2D de 4 bloques sobre espectrogramas de Mel en dB.",
+  "formato": "pytorch-p2",
+  "framework": "PyTorch",
+  "origen": "artefactos",
+  "fuente": "machineLearningP2",
+  "audio": { "sampleRate": 22050, "ventanaSec": 4, "bandasMel": 64, "fminHz": 300, "fmaxHz": 11025 }
+}

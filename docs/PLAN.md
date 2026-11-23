@@ -13,21 +13,24 @@ El usuario entrega una grabación de un ave y el sistema devuelve la especie má
 - Honestidad del resultado: la probabilidad no está calibrada y el modelo siempre elige una especie conocida. Por eso la interfaz muestra advertencias de confianza baja y una sección de limitaciones.
 - Dataset pequeño: las métricas por especie dependen de pocos audios de prueba. Se muestra la cantidad junto al F1.
 
-## 3. Pantallas (según los bocetos)
+## 3. Pantallas
 
-1. Carga: zona central con "Cargar audio" (clic o arrastrar) y botón de micrófono. Vista previa con reproductor y botón Analizar.
-2. Resultado: especie principal con anillo de probabilidad, candidatas, fiabilidad de la especie, espectrograma, datos del audio.
-3. Barra izquierda: historial de audios analizados (como la lista de chats). Al hacer clic se abre su resultado.
-4. Panel derecho: información general (modelo, formatos, consejos, limitaciones). Queda libre para ayuda o controles más adelante.
+1. Identificar Ave: carga o grabación, estado del análisis, resultado y últimas predicciones.
+2. Historial: tabla completa con filtro por especie.
+3. Dataset: estadísticas y grabaciones del CSV del Colab elegido.
+4. Métricas del Modelo: indicadores, curvas, matriz de confusión y reporte por especie.
+5. No Supervisado: espacio reservado para la siguiente entrega.
+6. Acerca de: metodología, limitaciones, equipo y créditos.
 
 ## 4. Diseño visual
 
-La marca visual actual, "Fénix", es provisional. Sus valores están en `src/shared/styles/tokens.css`, organizados en primitivos y tokens semánticos. El rediseño con identidad de HappyBirds es la siguiente etapa.
+Estilo clásico de ventanas con barra de título en tonos verdes, traído de `machineLearningP2`, con modo claro y oscuro. Los valores están en `src/shared/styles/tokens.css`. Algunos tonos se ajustaron para cumplir el contraste WCAG AA.
 
 ## 5. Arquitectura
 
 - React + TypeScript + Vite, CSS propio con tokens (sin librerías de UI).
-- `src/features/` agrupa cada funcionalidad: `analisis`, `historial` e `informacion`.
+- `src/features/` agrupa cada funcionalidad: `analisis`, `historial`, `dataset`, `modelo`, `no-supervisado` e `informacion`.
+- `src/services/experimentos/` registra cada Colab de `modelo/artefactos/`.
 - `src/shared/` contiene componentes, utilidades y estilos comunes.
 - `src/services/inference/` es el único punto de conexión con el modelo. Usa el proveedor `mock` por defecto o `http` según `VITE_INFERENCE_PROVIDER`.
 - `src/features/analisis/spectrogram.ts` calcula un espectrograma Mel aproximado de 64 bandas. Es visual, no es la entrada real de la CNN.
@@ -43,7 +46,7 @@ El detalle está en [arquitectura.md](arquitectura.md).
 
 1. [hecho] Repositorio, carga, grabación, resultado con datos simulados, historial.
 2. [hecho] Estructura por funcionalidad, contrato del modelo, tokens y documentación.
-3. Rediseño visual con identidad de HappyBirds.
+3. [hecho] Rediseño visual y registro de varios Colabs.
 4. Backend de inferencia y activación del proveedor HTTP.
 5. Nombres comunes reales de las especies y fotos con licencia.
 6. Despliegue (por ejemplo Vercel o Netlify para el frontend).

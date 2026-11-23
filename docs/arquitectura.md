@@ -9,6 +9,9 @@ flowchart LR
   H -->|POST /predict con WAV 16 kHz| C[Modelo en Colab o servidor]
   C -->|JSON del contrato| H
   A --> R[Historial en localStorage]
+  U --> D[Features dataset y modelo]
+  D --> E[services/experimentos]
+  E --> F[modelo/artefactos: un Colab por carpeta]
 ```
 
 ## Usuario e interfaz
@@ -17,7 +20,7 @@ flowchart LR
 
 ## Features
 
-Cada carpeta de `src/features/` agrupa los componentes, hooks y estilos de una funcionalidad. `analisis` maneja la captura, el resultado y el espectrograma, `historial` guarda los análisis en `localStorage` e `informacion` muestra el panel de ayuda.
+Cada carpeta de `src/features/` agrupa los componentes, hooks y estilos de una funcionalidad. `analisis` maneja la captura y el resultado, `historial` guarda los análisis en `localStorage`, `dataset` y `modelo` muestran los artefactos de cada Colab, y `informacion` presenta la metodología y el equipo.
 
 ## Shared
 
@@ -30,6 +33,10 @@ Cada carpeta de `src/features/` agrupa los componentes, hooks y estilos de una f
 ## Proveedores y adaptadores
 
 `mock.ts` genera resultados simulados y deterministas. `http.ts` convierte el audio, lo envía, aplica el adaptador activo y valida la respuesta contra el [contrato](contrato-modelo.md).
+
+## Registro de Colabs
+
+`src/services/experimentos/` detecta cada carpeta de `modelo/artefactos/` que tenga un `experimento.json`. Un adaptador por formato traduce sus JSON y CSV a una forma común, y los archivos se cargan solo cuando se necesitan. Esta capa alimenta las pantallas de datos y es independiente de la inferencia: mostrar las métricas de un Colab no conecta sus predicciones.
 
 ## Modelo
 

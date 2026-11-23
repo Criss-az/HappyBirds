@@ -4,7 +4,7 @@ Reconocimiento de aves de Bolivia por sus vocalizaciones: interfaz web para carg
 
 ## Estado del proyecto
 
-**Interfaz con datos simulados.** La aplicación todavía no está conectada al modelo: las especies y probabilidades que muestra son de ejemplo y no analizan el sonido. La capa para conectar el modelo real ya existe y está desactivada por defecto.
+**Predicciones simuladas.** La pestaña Identificar Ave todavía no está conectada a un modelo: sus especies y probabilidades no analizan el sonido. Las pestañas Dataset y Métricas sí muestran los artefactos reales del primer Colab (CNN 2D en PyTorch).
 
 ## Capturas de pantalla
 
@@ -14,17 +14,17 @@ _Pendiente._
 
 ## Características
 
-- Carga de audio con clic o arrastre (WAV, MP3, OGG, FLAC, M4A, WEBM).
-- Grabación con el micrófono, hasta 30 s.
-- Resultado con la especie más probable, candidatas y métricas de la especie.
-- Espectrograma Mel aproximado, calculado en el navegador.
-- Historial local de análisis.
+- Carga de audio con clic o arrastre (WAV, MP3, OGG, FLAC, M4A, WEBM) y grabación con el micrófono, hasta 30 s.
+- Resultado con especie probable, candidatas, forma de onda y espectrograma Mel aproximado.
+- Historial local con filtro por especie.
+- Exploración del dataset desde CSV y métricas del modelo, con matriz de confusión.
+- **Varios Colabs:** cada carpeta de `modelo/artefactos/` aparece sola en un selector.
+- Modo claro y oscuro, diseño responsive y navegación por teclado.
 - Proveedor de inferencia intercambiable: simulado o HTTP.
-- Conversión del audio a WAV PCM 16-bit, mono, 16 kHz antes de enviarlo al modelo.
 
 ## Stack
 
-React 18, TypeScript, Vite, CSS con tokens de diseño, ESLint y Prettier. El modelo se entrena aparte con TensorFlow/Keras y Librosa en Google Colab.
+React 18, TypeScript, Vite, CSS con tokens de diseño, iconos Lucide, ESLint y Prettier. El modelo se entrena aparte con TensorFlow/Keras y Librosa en Google Colab.
 
 ## Requisitos
 
@@ -63,19 +63,25 @@ Abre la dirección que muestra la terminal (normalmente http://localhost:5173). 
 ## Estructura de carpetas
 
 ```
-src/features/analisis/     Carga, grabación, resultado y espectrograma
-src/features/historial/    Barra lateral e historial local
-src/features/informacion/  Panel de información
-src/shared/components/     Componentes reutilizables e iconos
-src/shared/lib/            Utilidades: formato, tokens y conversión de audio
-src/shared/styles/         Tokens de diseño y estilos base
-src/shared/assets/         Plantilla del favicon
-src/services/inference/    Proveedores mock y HTTP, validación y adaptadores
-scripts/                   Revisión de tokens y plugin de Vite
-modelo/                    Notebooks, informe y artefactos livianos
-docs/                      Plan, arquitectura, contrato del modelo y bocetos
-public/                    Archivos estáticos
+src/app/                       Encabezado, router por hash y tema
+src/features/analisis/         Carga, grabación, resultado y espectrograma
+src/features/historial/        Historial local
+src/features/dataset/          Exploración del dataset y sus CSV
+src/features/modelo/           Métricas, matriz de confusión y selector de Colab
+src/features/no-supervisado/   Espacio para la siguiente entrega
+src/features/informacion/      Acerca de
+src/shared/                    Componentes, gráficos, utilidades, tokens y marca
+src/services/inference/        Proveedores mock y HTTP, validación y adaptadores
+src/services/experimentos/     Registro automático de Colabs y sus adaptadores
+scripts/                       Revisión de tokens y plugin de Vite
+modelo/artefactos/             Una carpeta por Colab: ficha, métricas y CSV
+docs/                          Plan, arquitectura, contrato del modelo y bocetos
+public/                        Archivos estáticos
 ```
+
+## Agregar un Colab
+
+Crea una carpeta en `modelo/artefactos/` con un `experimento.json` y los archivos del notebook. La guía está en [modelo/README.md](modelo/README.md).
 
 ## Conectar el modelo real
 
@@ -87,7 +93,7 @@ public/                    Archivos estáticos
 
 - [x] Carga, grabación, resultado e historial con datos simulados.
 - [x] Estructura por funcionalidad, contrato del modelo y tokens de diseño.
-- [ ] Rediseño visual con identidad de HappyBirds.
+- [x] Rediseño visual y registro de varios Colabs.
 - [ ] Elegir el modelo final y publicar su servicio de inferencia.
 - [ ] Nombres comunes definitivos y fotos con licencia.
 - [ ] Despliegue del frontend.

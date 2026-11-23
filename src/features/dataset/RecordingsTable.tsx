@@ -1,10 +1,13 @@
-import { ChevronLeft, ChevronRight, Search } from 'lucide-react'
+import { ChevronLeft, ChevronRight, SearchX } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { ExperimentData, Recording } from '../../services/experimentos/types'
 import { Badge } from '../../shared/components/Badge'
 import { Button } from '../../shared/components/Button'
 import { Card } from '../../shared/components/Card'
+import { EmptyState } from '../../shared/components/EmptyState'
 import { Icon } from '../../shared/components/Icon'
+import { SearchInput } from '../../shared/components/SearchInput'
+import { Select } from '../../shared/components/Select'
 
 const PAGE = 25
 const SPLIT_LABEL: Record<string, string> = { train: 'Entrenamiento', val: 'Validación', test: 'Prueba' }
@@ -63,49 +66,41 @@ export function RecordingsTable({ data }: { data: ExperimentData }) {
       flush
       actions={
         <div className="controls-row">
-          <Icon icon={Search} className="subtle" />
-          <input
-            className="input"
-            aria-label="Buscar por ID, especie o tipo"
+          <SearchInput
+            ariaLabel="Buscar por ID, especie o tipo"
             placeholder="Buscar ID, especie o tipo…"
             value={query}
-            onChange={(e) => reset(setQuery)(e.target.value)}
+            onChange={reset(setQuery)}
           />
           {splits.length > 0 && (
-            <select
-              className="select"
-              aria-label="Filtrar por partición"
+            <Select
+              ariaLabel="Filtrar por partición"
               value={split}
-              onChange={(e) => reset(setSplit)(e.target.value)}
-            >
-              <option value="">Todas las particiones</option>
-              {splits.map((s) => (
-                <option key={s} value={s}>
-                  {SPLIT_LABEL[s] ?? s}
-                </option>
-              ))}
-            </select>
+              onChange={reset(setSplit)}
+              options={[
+                { value: '', label: 'Todas las particiones' },
+                ...splits.map((v) => ({ value: v, label: SPLIT_LABEL[v] ?? v })),
+              ]}
+            />
           )}
           {qualities.length > 0 && (
-            <select
-              className="select"
-              aria-label="Filtrar por calidad"
+            <Select
+              ariaLabel="Filtrar por calidad"
               value={quality}
-              onChange={(e) => reset(setQuality)(e.target.value)}
-            >
-              <option value="">Todas las calidades</option>
-              {qualities.map((q) => (
-                <option key={q} value={q}>
-                  Calidad {q}
-                </option>
-              ))}
-            </select>
+              onChange={reset(setQuality)}
+              options={[
+                { value: '', label: 'Todas las calidades' },
+                ...qualities.map((v) => ({ value: v, label: `Calidad ${v}` })),
+              ]}
+            />
           )}
         </div>
       }
     >
       {filtered.length === 0 ? (
-        <div className="window-body empty-state">No hay grabaciones para estos filtros.</div>
+        <EmptyState icon={SearchX} title="Sin resultados">
+          Ninguna grabación coincide con estos filtros. Prueba quitar alguno.
+        </EmptyState>
       ) : (
         <>
           <div className="table-wrap">

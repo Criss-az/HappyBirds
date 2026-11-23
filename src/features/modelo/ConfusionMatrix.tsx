@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import type { ConfusionData } from '../../services/experimentos/types'
 import { Badge } from '../../shared/components/Badge'
 import { Card } from '../../shared/components/Card'
+import { Select } from '../../shared/components/Select'
 
 function background(val: number, max: number, diagonal: boolean) {
   if (val === 0) return 'var(--cm-empty)'
@@ -23,19 +24,12 @@ export function ConfusionMatrix({ data }: { data: ConfusionData }) {
       icon={Grid3x3}
       subtitle="Verde = aciertos en diagonal · Rojo = confusiones. Pasa el cursor o toca una celda."
       actions={
-        <select
-          className="select"
-          aria-label="Resaltar especie"
+        <Select
+          ariaLabel="Resaltar especie"
           value={highlight}
-          onChange={(e) => setHighlight(e.target.value)}
-        >
-          <option value="">Resaltar especie: Ninguna</option>
-          {labels.map((l) => (
-            <option key={l} value={l}>
-              {l}
-            </option>
-          ))}
-        </select>
+          onChange={setHighlight}
+          options={[{ value: '', label: 'Resaltar especie: ninguna' }, ...labels.map((l) => ({ value: l, label: l }))]}
+        />
       }
     >
       <div className="cm-container" tabIndex={0} role="region" aria-label="Matriz de confusión, desplazable">

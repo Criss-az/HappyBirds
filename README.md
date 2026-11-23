@@ -19,12 +19,13 @@ _Pendiente._
 - Historial local con filtro por especie.
 - Exploración del dataset desde CSV y métricas del modelo, con matriz de confusión.
 - **Varios Colabs:** cada carpeta de `modelo/artefactos/` aparece sola en un selector.
-- Modo claro y oscuro, diseño responsive y navegación por teclado.
+- Barra lateral con navegación por secciones, análisis recientes y controles (Colab activo y apariencia). En celular se convierte en un cajón.
+- Modo claro y oscuro, paneles translúcidos sobre un fondo con degradado, diseño responsive y navegación por teclado.
 - Proveedor de inferencia intercambiable: simulado o HTTP.
 
 ## Stack
 
-React 18, TypeScript, Vite, CSS con tokens de diseño, iconos Lucide, ESLint y Prettier. El modelo se entrena aparte con TensorFlow/Keras y Librosa en Google Colab.
+React 18, TypeScript, Vite, CSS con tokens de diseño, iconos Lucide, tipografía Fraunces autoalojada, ESLint y Prettier. El modelo se entrena aparte con TensorFlow/Keras y Librosa en Google Colab.
 
 ## Requisitos
 
@@ -63,14 +64,14 @@ Abre la dirección que muestra la terminal (normalmente http://localhost:5173). 
 ## Estructura de carpetas
 
 ```
-src/app/                       Encabezado, router por hash y tema
+src/app/                       Barra lateral, rutas, router por hash y tema
 src/features/analisis/         Carga, grabación, resultado y espectrograma
 src/features/historial/        Historial local
 src/features/dataset/          Exploración del dataset y sus CSV
 src/features/modelo/           Métricas, matriz de confusión y selector de Colab
 src/features/no-supervisado/   Espacio para la siguiente entrega
 src/features/informacion/      Acerca de
-src/shared/                    Componentes, gráficos, utilidades, tokens y marca
+src/shared/                    Componentes (Select, SearchInput, Segmented…), gráficos, tokens y marca
 src/services/inference/        Proveedores mock y HTTP, validación y adaptadores
 src/services/experimentos/     Registro automático de Colabs y sus adaptadores
 scripts/                       Revisión de tokens y plugin de Vite

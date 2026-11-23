@@ -5,7 +5,9 @@ import { href } from '../../app/useHashRoute'
 import { Badge } from '../../shared/components/Badge'
 import { Button } from '../../shared/components/Button'
 import { Card } from '../../shared/components/Card'
+import { EmptyState } from '../../shared/components/EmptyState'
 import { Icon } from '../../shared/components/Icon'
+import { Select } from '../../shared/components/Select'
 import { formatDate, pct } from '../../shared/lib/format'
 
 export function HistorialView({ items, onDelete }: { items: AnalysisResult[]; onDelete: (id: string) => void }) {
@@ -23,26 +25,27 @@ export function HistorialView({ items, onDelete }: { items: AnalysisResult[]; on
         flush
         actions={
           items.length > 0 ? (
-            <select
-              className="select"
-              aria-label="Filtrar por especie"
+            <Select
+              ariaLabel="Filtrar por especie"
               value={active}
-              onChange={(e) => setSpecies(e.target.value)}
-            >
-              <option value="">Todas las especies</option>
-              {options.map((o) => (
-                <option key={o} value={o}>
-                  {o}
-                </option>
-              ))}
-            </select>
+              onChange={setSpecies}
+              options={[{ value: '', label: 'Todas las especies' }, ...options.map((o) => ({ value: o, label: o }))]}
+            />
           ) : undefined
         }
       >
         {items.length === 0 ? (
-          <div className="window-body empty-state">
-            Todavía no hay análisis. <a href={href('analizar')}>Identifica tu primer audio</a>.
-          </div>
+          <EmptyState
+            icon={History}
+            title="Todavía no hay análisis"
+            action={
+              <a className="btn btn-primary" href={href('analizar')}>
+                Identificar un audio
+              </a>
+            }
+          >
+            Cuando analices un audio, su resultado quedará guardado aquí, en este navegador.
+          </EmptyState>
         ) : (
           <div className="table-wrap table-wrap--tall">
             <table className="stack-table">

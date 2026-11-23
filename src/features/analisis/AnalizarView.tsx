@@ -1,9 +1,11 @@
 import {
   AudioLines,
+  Circle,
   CircleAlert,
   CircleCheck,
-  Circle,
   FileAudio,
+  History,
+  Lightbulb,
   LoaderCircle,
   Mic,
   Square,
@@ -16,6 +18,7 @@ import { href } from '../../app/useHashRoute'
 import { Badge } from '../../shared/components/Badge'
 import { Button } from '../../shared/components/Button'
 import { Card } from '../../shared/components/Card'
+import { EmptyState } from '../../shared/components/EmptyState'
 import { Icon } from '../../shared/components/Icon'
 import { Notice } from '../../shared/components/Notice'
 import { formatBytes, formatDate, formatDuration, pct } from '../../shared/lib/format'
@@ -51,13 +54,17 @@ function Recent({ items }: { items: AnalysisResult[] }) {
       title="Últimas Predicciones"
       flush
       actions={
-        <a className="btn" href={href('historial')}>
-          Ver historial
-        </a>
+        items.length > 0 ? (
+          <a className="btn" href={href('historial')}>
+            Ver historial
+          </a>
+        ) : undefined
       }
     >
       {items.length === 0 ? (
-        <div className="window-body subtle">Aquí aparecerán los audios que analices.</div>
+        <EmptyState icon={History} title="Sin análisis todavía">
+          Los audios que analices aparecerán aquí.
+        </EmptyState>
       ) : (
         <ul className="recent">
           {items.slice(0, 3).map((r) => (
@@ -79,6 +86,19 @@ function Recent({ items }: { items: AnalysisResult[] }) {
   )
 }
 
+function Tips() {
+  return (
+    <Card title="Para Mejores Resultados" icon={Lightbulb}>
+      <ul className="tips">
+        <li>Entre 5 y 10 segundos de canto.</li>
+        <li>Poco ruido de fondo, sin voces.</li>
+        <li>Una sola ave dominante.</li>
+        <li>Acércate al ave y evita el viento sobre el micrófono.</li>
+      </ul>
+    </Card>
+  )
+}
+
 interface Props {
   session: AnalysisSession
   items: AnalysisResult[]
@@ -94,7 +114,7 @@ export function AnalizarView({ session, items, resultId, onNew }: Props) {
 
   if (result) {
     return (
-      <div className="detector-center-wrap">
+      <div>
         <ResultPanel result={result} audioUrl={audioUrl(result.id)} onNew={onNew} />
       </div>
     )
@@ -108,120 +128,117 @@ export function AnalizarView({ session, items, resultId, onNew }: Props) {
   const message = error ?? rec.error
 
   return (
-    <div className="detector-center-wrap">
-      <div className="detector-intro">
-        <h2>Identificar Especie por Canto o Llamado</h2>
-        <p>
-          Sube una grabación de campo o escucha directamente desde el micrófono para estimar a qué especie de ave de
-          Bolivia corresponde el sonido.
-        </p>
-      </div>
+    <div className="analyze-grid">
+      <div className="analyze-main">
+        {resultId && <Notice>Ese análisis ya no está en el historial.</Notice>}
 
-      {resultId && <Notice>Ese análisis ya no está en el historial.</Notice>}
-
-      <div
-        onDragOver={(e) => {
-          e.preventDefault()
-          if (!rec.recording && !busy) setDragging(true)
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={(e) => {
-          e.preventDefault()
-          setDragging(false)
-          pick(e.dataTransfer.files)
-        }}
-      >
-        <Card
-          title="Entrada de Sonido"
-          icon={AudioLines}
-          subtitle={`Formatos: WAV, MP3, OGG, FLAC, M4A, WEBM o captura en vivo (máx. ${MAX_RECORD_SEC} s)`}
+        <div
+          onDragOver={(e) => {
+            e.preventDefault()
+            if (!rec.recording && !busy) setDragging(true)
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault()
+            setDragging(false)
+            pick(e.dataTransfer.files)
+          }}
         >
-          <input
-            ref={input}
-            type="file"
-            accept={ACCEPT}
-            hidden
-            aria-label="Elegir archivo de audio"
-            onChange={(e) => {
-              pick(e.target.files)
-              e.target.value = ''
-            }}
-          />
-          <div className="primary-action-grid">
-            <button
-              type="button"
-              className={`action-tile primary ${dragging ? 'dragging' : ''}`}
-              disabled={rec.recording || busy}
-              onClick={() => input.current?.click()}
-            >
-              <Icon icon={Upload} size="tile" />
-              <span className="action-tile-title">Subir archivo de audio</span>
-              <span className="action-tile-desc">Haz clic para seleccionar o arrastra aquí un archivo</span>
-            </button>
-            <button
-              type="button"
-              className={`action-tile ${rec.recording ? 'recording' : ''}`}
-              disabled={busy}
-              onClick={rec.recording ? rec.stop : rec.start}
-            >
-              <Icon icon={rec.recording ? Square : Mic} size="tile" className="icon-accent" />
-              <span className="action-tile-title">{rec.recording ? 'Detener grabación' : 'Grabar audio'}</span>
-              <span className="action-tile-desc">
-                {rec.recording
-                  ? `Grabando (${formatDuration(rec.elapsed)} / ${formatDuration(MAX_RECORD_SEC)})`
-                  : 'Graba el canto desde el micrófono de tu equipo'}
-              </span>
-            </button>
-          </div>
-
-          {rec.recording && (
-            <div className="mic-panel" role="status">
-              <div className="mic-panel-row">
-                <span className="mic-time">
-                  Escuchando micrófono… {formatDuration(rec.elapsed)} / {formatDuration(MAX_RECORD_SEC)}
-                </span>
-              </div>
-              <div
-                className="mic-meter-track"
-                role="meter"
-                aria-label="Nivel de entrada del micrófono"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={Math.round(rec.level * 100)}
+          <Card
+            title="Entrada de Sonido"
+            icon={AudioLines}
+            subtitle={`Formatos: WAV, MP3, OGG, FLAC, M4A, WEBM o captura en vivo (máx. ${MAX_RECORD_SEC} s)`}
+          >
+            <input
+              ref={input}
+              type="file"
+              accept={ACCEPT}
+              hidden
+              aria-label="Elegir archivo de audio"
+              onChange={(e) => {
+                pick(e.target.files)
+                e.target.value = ''
+              }}
+            />
+            <div className="primary-action-grid">
+              <button
+                type="button"
+                className={`action-tile primary ${dragging ? 'dragging' : ''}`}
+                disabled={rec.recording || busy}
+                onClick={() => input.current?.click()}
               >
-                <div className="mic-meter-fill" style={{ width: `${Math.round(rec.level * 100)}%` }} />
-              </div>
+                <Icon icon={Upload} size="tile" />
+                <span className="action-tile-title">Subir archivo de audio</span>
+                <span className="action-tile-desc">Haz clic para seleccionar o arrastra aquí un archivo</span>
+              </button>
+              <button
+                type="button"
+                className={`action-tile ${rec.recording ? 'recording' : ''}`}
+                disabled={busy}
+                onClick={rec.recording ? rec.stop : rec.start}
+              >
+                <Icon icon={rec.recording ? Square : Mic} size="tile" className="icon-accent" />
+                <span className="action-tile-title">{rec.recording ? 'Detener grabación' : 'Grabar audio'}</span>
+                <span className="action-tile-desc">
+                  {rec.recording
+                    ? `Grabando (${formatDuration(rec.elapsed)} / ${formatDuration(MAX_RECORD_SEC)})`
+                    : 'Graba el canto desde el micrófono de tu equipo'}
+                </span>
+              </button>
             </div>
-          )}
 
-          {staged && !rec.recording && (
-            <div className="staged">
-              <div className="staged__file">
-                <Icon icon={FileAudio} size="md" className="icon-accent" />
-                <div>
-                  <span className="staged__name">{staged.file.name}</span>
-                  <span className="small muted">
-                    {formatBytes(staged.file.size)} · {staged.source === 'recording' ? 'Grabación' : 'Archivo'}
+            {rec.recording && (
+              <div className="mic-panel" role="status">
+                <div className="mic-panel-row">
+                  <span className="mic-time">
+                    Escuchando micrófono… {formatDuration(rec.elapsed)} / {formatDuration(MAX_RECORD_SEC)}
                   </span>
                 </div>
+                <div
+                  className="mic-meter-track"
+                  role="meter"
+                  aria-label="Nivel de entrada del micrófono"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.round(rec.level * 100)}
+                >
+                  <div className="mic-meter-fill" style={{ width: `${Math.round(rec.level * 100)}%` }} />
+                </div>
               </div>
-              <audio controls src={staged.url} />
-              <div className="controls-row">
-                <Button variant="primary" disabled={busy} onClick={() => void analyze()}>
-                  <Icon icon={AudioLines} /> Analizar audio
-                </Button>
-                <Button variant="neutral" disabled={busy} onClick={clearStaged}>
-                  <Icon icon={X} /> Quitar
-                </Button>
-              </div>
-            </div>
-          )}
-        </Card>
-      </div>
+            )}
 
-      {showSteps && <Steps steps={steps} />}
-      {message && <Notice tone="error">{message}</Notice>}
-      <Recent items={items} />
+            {staged && !rec.recording && (
+              <div className="staged">
+                <div className="staged__file">
+                  <Icon icon={FileAudio} size="md" className="icon-accent" />
+                  <div>
+                    <span className="staged__name">{staged.file.name}</span>
+                    <span className="small muted">
+                      {formatBytes(staged.file.size)} · {staged.source === 'recording' ? 'Grabación' : 'Archivo'}
+                    </span>
+                  </div>
+                </div>
+                <audio controls src={staged.url} />
+                <div className="controls-row">
+                  <Button variant="primary" disabled={busy} onClick={() => void analyze()}>
+                    <Icon icon={AudioLines} /> Analizar audio
+                  </Button>
+                  <Button variant="neutral" disabled={busy} onClick={clearStaged}>
+                    <Icon icon={X} /> Quitar
+                  </Button>
+                </div>
+              </div>
+            )}
+          </Card>
+        </div>
+
+        {showSteps && <Steps steps={steps} />}
+        {message && <Notice tone="error">{message}</Notice>}
+      </div>
+      <aside className="analyze-rail" aria-label="Ayuda y recientes">
+        <Recent items={items} />
+        <Tips />
+      </aside>
     </div>
   )
 }

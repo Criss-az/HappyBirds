@@ -1,13 +1,14 @@
-import { Award, Cpu, TrendingUp, TriangleAlert } from 'lucide-react'
+import { Award, ChartColumn, Cpu, TrendingUp, TriangleAlert } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import type { SpeciesReport } from '../../services/experimentos/types'
 import { useExperiments } from '../../services/experimentos/useExperiments'
 import { Badge } from '../../shared/components/Badge'
 import { Card } from '../../shared/components/Card'
 import { BarChart, LineChart } from '../../shared/components/charts/Charts'
+import { EmptyState } from '../../shared/components/EmptyState'
 import { Kpi } from '../../shared/components/Kpi'
 import { Notice } from '../../shared/components/Notice'
-import { ExperimentBar } from './ExperimentBar'
+import { ExperimentInfo } from './ExperimentInfo'
 import { ConfusionMatrix } from './ConfusionMatrix'
 
 type SortKey = keyof SpeciesReport
@@ -36,7 +37,13 @@ export function ModeloView() {
 
   if (loading) return <div className="empty-state">Cargando métricas del modelo…</div>
   if (error) return <Notice tone="error">No se pudieron cargar las métricas: {error}</Notice>
-  if (!selected) return <div className="empty-state">Aún no hay Colabs registrados en modelo/artefactos.</div>
+  if (!selected) {
+    return (
+      <EmptyState icon={ChartColumn} title="Aún no hay Colabs registrados">
+        Crea una carpeta en modelo/artefactos con un experimento.json. La guía está en modelo/README.md.
+      </EmptyState>
+    )
+  }
 
   const m = data?.metrics
   const history = data?.history ?? []
@@ -50,13 +57,15 @@ export function ModeloView() {
 
   return (
     <div className="section-stack">
-      <ExperimentBar />
+      <ExperimentInfo />
       <Notice>
         Estas métricas vienen de los archivos del notebook. Las predicciones de la pestaña Identificar Ave siguen
         simuladas hasta conectar el modelo.
       </Notice>
       {!m ? (
-        <div className="empty-state">Este Colab todavía no exportó métricas generales.</div>
+        <EmptyState icon={ChartColumn} title="Sin métricas generales">
+          Este Colab todavía no exportó metricas_generales.json.
+        </EmptyState>
       ) : (
         <div className="kpi-grid">
           <Kpi
@@ -76,10 +85,10 @@ export function ModeloView() {
             <Kpi label="Recall Macro" value={p(m.recallMacro, 2)} icon={TrendingUp} />
           )}
           <Kpi
-            label={m.f1Weighted !== undefined ? 'F1 Macro / Ponderado' : 'F1 Macro'}
-            value={m.f1Weighted !== undefined ? `${p(m.f1Macro, 2)} / ${p(m.f1Weighted, 2)}` : p(m.f1Macro, 2)}
+            label="F1 Macro"
+            value={p(m.f1Macro, 2)}
             icon={Award}
-            sub={`Precision: ${p(m.precisionMacro)} · Recall: ${p(m.recallMacro)}`}
+            sub={`${m.f1Weighted !== undefined ? `Ponderado: ${p(m.f1Weighted, 2)} · ` : ''}Precision: ${p(m.precisionMacro)} · Recall: ${p(m.recallMacro)}`}
           />
           <Kpi
             label="Pérdida en Prueba"

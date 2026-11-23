@@ -16,7 +16,7 @@ flowchart LR
 
 ## Usuario e interfaz
 
-`src/App.tsx` coordina las vistas y el estado general. El usuario carga o graba un audio, inicia el análisis y consulta el resultado o el historial.
+`src/App.tsx` coordina las vistas y el estado general. La navegación está en la barra lateral (`src/app/Sidebar.tsx`), que también reúne los controles globales: Colab activo, apariencia y estado del modelo. El usuario carga o graba un audio, inicia el análisis y consulta el resultado o el historial.
 
 ## Features
 
@@ -24,7 +24,7 @@ Cada carpeta de `src/features/` agrupa los componentes, hooks y estilos de una f
 
 ## Shared
 
-`src/shared/` contiene lo que no pertenece a una sola funcionalidad: componentes básicos, utilidades, conversión de audio y estilos. Los colores viven solo en `tokens.css`, y `pnpm check:tokens` lo hace cumplir.
+`src/shared/` contiene lo que no pertenece a una sola funcionalidad: componentes básicos, utilidades, conversión de audio y estilos. Los colores viven solo en `tokens.css`, y `pnpm check:tokens` lo hace cumplir. Los paneles son translúcidos (tokens `--color-glass*`) y dejan ver el degradado de fondo (`--background-page`).
 
 ## Servicios de inferencia
 

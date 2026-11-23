@@ -24,7 +24,7 @@ El usuario entrega una grabación de un ave y el sistema devuelve la especie má
 
 ## 4. Diseño visual
 
-Estilo clásico de ventanas con barra de título en tonos verdes, traído de `machineLearningP2`, con modo claro y oscuro. Los valores están en `src/shared/styles/tokens.css`. Algunos tonos se ajustaron para cumplir el contraste WCAG AA.
+Estilo de ventanas con barra de título en tonos verdes, traído de `machineLearningP2`, con modo claro y oscuro. Los paneles son translúcidos y dejan ver un fondo con degradado verde, azul río y dorado. La navegación está en una barra lateral con sus controles. Los títulos usan la serif Fraunces y el logo es un ave cantora propia. Los valores están en `src/shared/styles/tokens.css`, y los tonos se ajustaron para cumplir el contraste WCAG AA.
 
 ## 5. Arquitectura
 

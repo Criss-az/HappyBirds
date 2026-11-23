@@ -35,6 +35,10 @@ pnpm build
 
 No subas pesos de modelos, datasets ni audios. Solo van archivos livianos en `modelo/artefactos/`.
 
+## Componentes compartidos
+
+Los controles viven en `src/shared/components/`. Usa `Select`, `SearchInput` y `Segmented` en lugar de `<select>` o `<input>` nativos, y `PageHeader` y `EmptyState` para encabezados y estados vacíos. Los colores y tamaños salen siempre de `tokens.css`.
+
 ## Integrar un modelo nuevo
 
 1. **Crea el adaptador.** Copia `src/services/inference/adapters/ejemploColab.ts` y traduce la salida de tu notebook al [contrato](docs/contrato-modelo.md). Si tu modelo ya lo cumple, omite este paso.

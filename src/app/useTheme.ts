@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { readToken } from '../shared/lib/readToken'
 
 export type Theme = 'light' | 'dark'
@@ -25,6 +25,5 @@ export function useTheme() {
     }
   }, [theme])
 
-  const toggle = useCallback(() => setTheme((t) => (t === 'light' ? 'dark' : 'light')), [])
-  return { theme, toggle }
+  return { theme, setTheme }
 }

@@ -87,7 +87,8 @@ export function AcercaView() {
       <Card title="Créditos">
         <p className="prose">
           Diseño y artefactos del primer modelo: proyecto machineLearningP2 del equipo. Grabaciones del dataset:
-          Xeno-canto, con la licencia de cada autor. Iconos: Lucide (licencia ISC).
+          Xeno-canto, con la licencia de cada autor. Iconos: Lucide (licencia ISC). Tipografía de títulos: Fraunces
+          (licencia OFL).
         </p>
       </Card>
     </div>

@@ -1,13 +1,15 @@
-import { CircleCheck, Clock, FileAudio, Layers, Search } from 'lucide-react'
+import { CircleCheck, Clock, Database, FileAudio, Layers, SearchX } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useExperiments } from '../../services/experimentos/useExperiments'
 import { Badge } from '../../shared/components/Badge'
 import { Card } from '../../shared/components/Card'
 import { BarChart, DonutChart, type Series } from '../../shared/components/charts/Charts'
+import { EmptyState } from '../../shared/components/EmptyState'
 import { Icon } from '../../shared/components/Icon'
 import { Kpi } from '../../shared/components/Kpi'
 import { Notice } from '../../shared/components/Notice'
-import { ExperimentBar } from '../modelo/ExperimentBar'
+import { SearchInput } from '../../shared/components/SearchInput'
+import { ExperimentInfo } from '../modelo/ExperimentInfo'
 import { RecordingsTable } from './RecordingsTable'
 
 const QUALITY: Record<string, string> = { A: '--chart-quality-a', B: '--chart-quality-b', C: '--chart-quality-c' }
@@ -36,7 +38,11 @@ export function DatasetView() {
   if (loading) return <div className="empty-state">Cargando estadísticas del dataset…</div>
   if (error) return <Notice tone="error">No se pudo cargar el dataset: {error}</Notice>
   if (!selected) {
-    return <div className="empty-state">Aún no hay Colabs registrados en modelo/artefactos.</div>
+    return (
+      <EmptyState icon={Database} title="Aún no hay Colabs registrados">
+        Crea una carpeta en modelo/artefactos con un experimento.json. La guía está en modelo/README.md.
+      </EmptyState>
+    )
   }
 
   const hasQuality = Boolean(dataset?.species.some((s) => s.qualityA !== undefined))
@@ -46,9 +52,11 @@ export function DatasetView() {
 
   return (
     <div className="section-stack">
-      <ExperimentBar />
+      <ExperimentInfo />
       {!dataset || !data ? (
-        <div className="empty-state">Este Colab todavía no exportó un resumen del dataset.</div>
+        <EmptyState icon={Database} title="Sin resumen del dataset">
+          Este Colab todavía no exportó dataset_resumen.json ni sus estadísticas.
+        </EmptyState>
       ) : (
         <>
           {dataset.audit && (
@@ -150,20 +158,18 @@ export function DatasetView() {
               title={hasQuality ? 'Muestras por Especie (Calidad Apilada)' : 'Muestras por Especie'}
               subtitle={`${species.length} de ${dataset.species.length} especies`}
               actions={
-                <div className="controls-row">
-                  <Icon icon={Search} className="subtle" />
-                  <input
-                    className="input"
-                    aria-label="Filtrar especie"
-                    placeholder="Filtrar especie…"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                  />
-                </div>
+                <SearchInput
+                  ariaLabel="Filtrar especie"
+                  placeholder="Filtrar especie…"
+                  value={filter}
+                  onChange={setFilter}
+                />
               }
             >
               {species.length === 0 ? (
-                <div className="empty-state">Ninguna especie coincide con el filtro.</div>
+                <EmptyState icon={SearchX} title="Sin resultados">
+                  Ninguna especie coincide con el filtro.
+                </EmptyState>
               ) : (
                 <BarChart
                   label="Grabaciones por especie"

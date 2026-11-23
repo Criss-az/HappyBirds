@@ -4,25 +4,21 @@ import { Badge } from '../../shared/components/Badge'
 import { Icon } from '../../shared/components/Icon'
 import { Notice } from '../../shared/components/Notice'
 
-/** Selector de Colab, compartido por Dataset y Métricas. */
-export function ExperimentBar() {
-  const { experiments, selected, select, problems } = useExperiments()
+/** Resume el Colab activo. Se cambia desde la barra lateral. */
+export function ExperimentInfo() {
+  const { selected, problems } = useExperiments()
   if (!selected) return null
   const a = selected.audio
   return (
     <>
       <div className="experiment-bar">
-        <label>
+        <div className="experiment-bar__name">
           <Icon icon={FlaskConical} className="icon-accent" />
-          Colab / experimento
-          <select className="select" value={selected.id} onChange={(e) => select(e.target.value)}>
-            {experiments.map((e) => (
-              <option key={e.id} value={e.id}>
-                {e.nombre}
-              </option>
-            ))}
-          </select>
-        </label>
+          <span>
+            <small>Colab activo</small>
+            <strong>{selected.nombre}</strong>
+          </span>
+        </div>
         <div className="pill-list">
           {selected.origen === 'ejemplo' ? (
             <Badge tone="amber">Datos de ejemplo</Badge>

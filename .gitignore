@@ -5,3 +5,20 @@ dist
 *.log
 .DS_Store
 *:Zone.Identifier
+
+# Pesos de modelos
+*.keras
+*.h5
+*.onnx
+*.tflite
+
+# Datos y audios
+modelo/datasets/
+*.wav
+*.mp3
+*.ogg
+*.flac
+*.m4a
+
+# Conservar carpetas vacías
+!.gitkeep

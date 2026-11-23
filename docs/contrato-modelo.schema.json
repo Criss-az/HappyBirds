@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://happybirds.local/contrato-modelo.schema.json",
+  "title": "Respuesta de POST /predict",
+  "type": "object",
+  "required": ["top", "speciesMetrics", "window", "modelVersion", "warnings"],
+  "properties": {
+    "top": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/candidate" }
+    },
+    "speciesMetrics": {
+      "type": "object",
+      "required": ["f1", "recall", "testSamples"],
+      "properties": {
+        "f1": { "$ref": "#/$defs/ratio" },
+        "recall": { "$ref": "#/$defs/ratio" },
+        "testSamples": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "window": {
+      "type": "object",
+      "required": ["startSec", "durationSec"],
+      "properties": {
+        "startSec": { "type": "number", "minimum": 0 },
+        "durationSec": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "modelVersion": { "$ref": "#/$defs/text" },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+    "candidate": {
+      "type": "object",
+      "required": ["id", "commonName", "scientificName", "probability"],
+      "properties": {
+        "id": { "$ref": "#/$defs/text" },
+        "commonName": { "$ref": "#/$defs/text" },
+        "scientificName": { "$ref": "#/$defs/text" },
+        "probability": { "$ref": "#/$defs/ratio" }
+      }
+    },
+    "especies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "commonName", "scientificName"],
+        "properties": {
+          "id": { "$ref": "#/$defs/text" },
+          "commonName": { "$ref": "#/$defs/text" },
+          "scientificName": { "$ref": "#/$defs/text" }
+        }
+      }
+    },
+    "metricasGenerales": {
+      "type": "object",
+      "required": ["accuracy", "precisionMacro", "recallMacro", "f1Macro", "loss"],
+      "properties": {
+        "accuracy": { "$ref": "#/$defs/ratio" },
+        "precisionMacro": { "$ref": "#/$defs/ratio" },
+        "recallMacro": { "$ref": "#/$defs/ratio" },
+        "f1Macro": { "$ref": "#/$defs/ratio" },
+        "loss": { "type": "number", "minimum": 0 },
+        "modelVersion": { "$ref": "#/$defs/text" }
+      }
+    },
+    "datasetResumen": {
+      "type": "object",
+      "required": ["totalRecordings", "species"],
+      "properties": {
+        "totalRecordings": { "type": "integer", "minimum": 0 },
+        "species": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "train", "validation", "test", "total"],
+            "properties": {
+              "id": { "$ref": "#/$defs/text" },
+              "train": { "type": "integer", "minimum": 0 },
+              "validation": { "type": "integer", "minimum": 0 },
+              "test": { "type": "integer", "minimum": 0 },
+              "total": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

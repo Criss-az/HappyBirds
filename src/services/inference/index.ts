@@ -1,9 +1,13 @@
-import type { InferenceService } from '../types'
-import { mockInference } from './mockInference'
+import type { InferenceService } from '../../types'
+import { httpInference } from './http'
+import { mockInference } from './mock'
 
-/**
- * Punto único de integración con el modelo.
- * Hoy usa la simulación. Cuando exista el backend, devolver un servicio HTTP
- * que cumpla InferenceService (ver docs/PLAN.md, sección "Contrato de la API").
- */
-export const inference: InferenceService = mockInference
+function selectProvider(): InferenceService {
+  const provider = (import.meta.env.VITE_INFERENCE_PROVIDER ?? 'mock').trim().toLowerCase()
+  if (provider === 'http') return httpInference
+  if (provider !== 'mock') console.warn(`VITE_INFERENCE_PROVIDER="${provider}" no existe. Se usa "mock".`)
+  return mockInference
+}
+
+/** Punto único de integración con el modelo. El contrato está en docs/contrato-modelo.md. */
+export const inference: InferenceService = selectProvider()

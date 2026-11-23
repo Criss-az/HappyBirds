@@ -1,4 +1,4 @@
-import type { AnalysisResult, AnalyzeRequest, InferenceService } from '../types'
+import type { AnalysisResult, AnalyzeRequest, InferenceService } from '../../types'
 import { SPECIES } from './mockSpecies'
 
 function hash(str: string): number {
@@ -33,9 +33,7 @@ export const mockInference: InferenceService = {
     const logits = order.map((_, i) => (i === 0 ? 1.2 + rand() * 2.4 : rand() * 1.6))
     const exp = logits.map(Math.exp)
     const sum = exp.reduce((a, b) => a + b, 0)
-    const top = order
-      .map((s, i) => ({ ...s, probability: exp[i] / sum }))
-      .sort((a, b) => b.probability - a.probability)
+    const top = order.map((s, i) => ({ ...s, probability: exp[i] / sum })).sort((a, b) => b.probability - a.probability)
 
     const warnings: string[] = []
     if (top[0].probability < 0.5) warnings.push('Confianza baja: varias especies tienen probabilidades parecidas.')

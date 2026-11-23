@@ -11,11 +11,11 @@ Node.js 18 o superior.
 ## Uso
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Abre la dirección que muestra la terminal (normalmente http://localhost:5173). Para generar la versión de producción: `npm run build`.
+Abre la dirección que muestra la terminal (normalmente http://localhost:5173). Para generar la versión de producción: `pnpm build`.
 
 El micrófono solo funciona en `localhost` o con HTTPS.
 
